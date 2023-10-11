@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+id Int @id @default(autoincrement())
+firstName String
+lastName String
+validated Boolean
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+todo  todo[]
+// todo? si unique
+// @@map("users")   donner un nom différent dans la base de donnée
+
+}
+
+model todo{
+id Int @id @default(autoincrement())
+todoText String
+completed Boolean
+userID Int  
+//  @unique si unique
+// user users @relation(fields: [userID], references: [id], onDelete: Cascade)  Si sans suppression automatique des suites de celle du parent
+user users @relation(fields: [userID], references: [id], onDelete: Cascade)
+tags tags[]
+}
+
+model tags{
+id Int @id @default(autoincrement())
+textTag String
+todo todo[]
+
+}
